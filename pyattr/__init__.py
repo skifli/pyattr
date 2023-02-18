@@ -1,13 +1,13 @@
 from typing import Any
 from inspect import stack
 
-__version__ = "1.1.0"
+__version__ = "1.1.1"
 
 
 class ProtectedDict(dict):
     def __pyattr_check(self, __key: str, class_object: object, i: int = 3) -> str:
         try:
-            caller_class = stack()[3][0].f_locals["self"].__class__.__name__
+            caller_class = stack()[i][0].f_locals["self"].__class__.__name__
 
             if __key.startswith(f"_{caller_class}"):
                 __key = __key.removeprefix(f"_{caller_class}")

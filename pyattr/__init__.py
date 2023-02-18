@@ -1,10 +1,10 @@
 from typing import Any
 from inspect import stack
 
-__version__ = "1.1.1"
+__version__ = "1.2.0"
 
 
-class ProtectedDict(dict):
+class _ProtectedDict(dict):
     def __pyattr_check(self, __key: str, class_object: object, i: int = 3) -> str:
         try:
             caller_class = stack()[i][0].f_locals["self"].__class__.__name__
@@ -46,7 +46,7 @@ class ProtectedDict(dict):
         super().__setitem__(self.__pyattr_check(__key, class_object), __value)
 
 
-class Protected(ProtectedDict):
+class Pyattr(_ProtectedDict):
     def __init__(self, **kwargs) -> None:
         object.__setattr__(
             self, "pyattr_class_object", stack()[1][0].f_locals["__class__"]

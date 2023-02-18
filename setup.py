@@ -1,7 +1,7 @@
 from setuptools import setup
 from pyattr import __version__
 
-with open("README", "r") as f:
+with open("README.md", "r") as f:
     long_description = f.read()
 
 setup(

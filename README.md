@@ -1,7 +1,7 @@
 # pyattr
 
-![PyPI](https://img.shields.io/pypi/v/pyattr)
-![PyPI - Downloads](https://img.shields.io/pypi/dm/pyattr)
+[![PyPI](https://img.shields.io/pypi/v/pyattr)](https://pypi.org/project/pyattr)
+[![PyPI - Downloads](https://img.shields.io/pypi/dm/pyattr)](https://pypi.org/project/pyattr/#files)
 ![Lines of Code](https://img.shields.io/github/languages/code-size/skifli/pyattr)
 
 - [pyattr](#pyattr)

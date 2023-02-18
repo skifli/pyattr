@@ -1,11 +1,11 @@
 from typing import Any
 from inspect import stack
 
-__version__ = "1.0.0"
+__version__ = "1.1.0"
 
 
 class ProtectedDict(dict):
-    def pyattr_check(self, __key: str, class_object: object) -> str:
+    def __pyattr_check(self, __key: str, class_object: object, i: int = 3) -> str:
         try:
             caller_class = stack()[3][0].f_locals["self"].__class__.__name__
 
@@ -14,7 +14,7 @@ class ProtectedDict(dict):
         except KeyError:
             pass
 
-        caller = stack()[3][0].f_locals
+        caller = stack()[i][0].f_locals
 
         if __key.startswith("__"):
             if "self" in caller:
@@ -40,10 +40,10 @@ class ProtectedDict(dict):
         return __key
 
     def __getitem__(self, __key: str, class_object: object) -> Any:
-        return super().__getitem__(self.pyattr_check(__key, class_object))
+        return super().__getitem__(self.__pyattr_check(__key, class_object))
 
     def __setitem__(self, __key: str, __value: str, class_object: object) -> None:
-        super().__setitem__(self.pyattr_check(__key, class_object), __value)
+        super().__setitem__(self.__pyattr_check(__key, class_object), __value)
 
 
 class Protected(ProtectedDict):
@@ -56,7 +56,10 @@ class Protected(ProtectedDict):
 
     def __getattribute__(self, __name: str) -> Any:
         try:
-            return object.__getattribute__(self, __name)
+            obj = object.__getattribute__(self, __name)
+
+            if __name in ["__class__", "_ProtectedDict__pyattr_check"]:
+                return obj
         except AttributeError:
             pass
 

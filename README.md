@@ -10,7 +10,7 @@
   - [Example](#example)
   - [How does it work?](#how-does-it-work)
 
-While Python does have name mangling, it is not nearly as powerful as access modifiers found in languages such as C++. **pyattr** provides an easy-to-use API for access modifiers in Python, and is actively developed.
+While Python does have name mangling, it is not nearly as powerful as access modifiers found in languages such as C++. **pyattr** provides an easy-to-use API for access modifiers in Python.
 
 ## Installation
 
@@ -26,7 +26,7 @@ All you have to do is make your class inherit from the *`pyattr.Pyattr`* class, 
 
 ## Example
 
-Here is a simple examples involving a protected variable.
+Here is a simple examples involving a private variable.
 
 ```python
 from pyattr import Pyattr

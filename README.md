@@ -38,7 +38,7 @@ class Example(Pyattr):
         self.__name = "pyattr"
 
 example = Example()
-print(example.__name) # Error - '__name' is a protected attribute of 'Example'.
+print(example.__name) # Error - '__name' is a private attribute of 'Example'.
 ```
 
 As well as variables, **pyattr** also supports access control of functions!
@@ -55,11 +55,11 @@ class Example(Pyattr):
 
 
 example = Example()
-print(example.__example())  # Error - '__example' is a protected attribute of 'Example'.
+print(example.__example())  # Error - '__example' is a private attribute of 'Example'.
 ```
 
 ## How does it work?
 
-**pyattr** overrides the default *set* and *get* functions of your class. The overridden functions defined by **pyattr** are merged into your class when you inherit from the *`pyattr.Pyattr`* class. As well as this, the *`pyattr.Pyattr`* class inherits from the *`pyattr._ProtectedDict`* class, which provides a custom dictionary implementation. This is because you can change the variables in a class using *`class.__dict__["var"] = "val"`*, meaning a custom dictionary would be the best way to prevent the access system being circumvented.
+**pyattr** overrides the default *set* and *get* functions of your class. The overridden functions defined by **pyattr** are merged into your class when you inherit from the *`pyattr.Pyattr`* class. As well as this, the *`pyattr.Pyattr`* class inherits from the *`pyattr._PyattrDict`* class, which provides a custom dictionary implementation. This is because you can change the variables in a class using *`class.__dict__["var"] = "val"`*, meaning a custom dictionary would be the best way to prevent the access system being circumvented.
 
 The overriden *set* and *get* functions of your class call the respective *set* and *get* functions of the custom dictionary. This dictionary, using *`inspect.stack()`*, works out the caller's function, and the caller's class (if any). It uses this data to work out if the caller should be allowed to access the specified variables. If it shouldn't, an *`AttributeError`* is raised, with an error message explaining the cause.

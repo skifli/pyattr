@@ -10,7 +10,7 @@ setup(
     author="skifli",
     url="https://github.com/skifli/pyattr",
     project_urls={
-        "Documentation": "https://github.com/skifli/pyattr",
+        "Documentation": "https://github.com/skifli/pyattr#example",
         "Source": "https://github.com/skifli/pyattr",
     },
     description="Proper access modifiers for Python classes.",

@@ -1,42 +1,64 @@
+from types import FrameType, TracebackType
+from sys import _getframe, exc_info
 from typing import Any, final
-from inspect import stack
 
-__version__ = "1.2.1"
+__version__ = "1.3.0"
+
+
+def _pyattr_stack() -> list[FrameType]:
+    frame = _getframe().f_back
+    frames = []
+
+    while frame:
+        frames.append(frame)
+        frame = frame.f_back
+
+    return frames
 
 
 class _PyattrDict(dict):
     @final
     def __pyattr_check(self, __key: str, class_object: object, i: int = 3) -> str:
-        try:
-            caller_class = stack()[i][0].f_locals["self"].__class__.__name__
+        caller = _pyattr_stack()[i].f_locals
+
+        if "self" in caller:
+            caller_class = caller["self"].__class__.__name__
 
             if __key.startswith(f"_{caller_class}"):
                 __key = __key.removeprefix(f"_{caller_class}")
-        except KeyError:
-            pass
 
-        caller = stack()[i][0].f_locals
-
-        if __key.startswith("__"):
-            if "self" in caller:
-                if caller["self"].__class__ != class_object:
+        try:
+            if __key.startswith("__"):
+                if "self" in caller:
+                    if caller["self"].__class__ != class_object:
+                        raise AttributeError(
+                            f"Attribute '{__key}' of '{class_object.__name__}' object is private."
+                        )
+                else:
                     raise AttributeError(
                         f"Attribute '{__key}' of '{class_object.__name__}' object is private."
                     )
-            else:
-                raise AttributeError(
-                    f"Attribute '{__key}' of '{class_object.__name__}' object is private."
-                )
-        elif __key.startswith("_"):
-            if "self" in caller:
-                if class_object not in caller["self"].__class__.__mro__:
+            elif __key.startswith("_"):
+                if "self" in caller:
+                    if class_object not in caller["self"].__class__.__mro__:
+                        raise AttributeError(
+                            f"Attribute '{__key}' of '{class_object.__name__}' object is protected."
+                        )
+                else:
                     raise AttributeError(
                         f"Attribute '{__key}' of '{class_object.__name__}' object is protected."
                     )
-            else:
-                raise AttributeError(
-                    f"Attribute '{__key}' of '{class_object.__name__}' object is protected."
+        except AttributeError as e:
+            last_frame = exc_info()[2].tb_frame.f_back.f_back.f_back
+
+            raise AttributeError(*e.args, name=e.name, obj=e.obj).with_traceback(
+                TracebackType(
+                    tb_next=None,
+                    tb_frame=last_frame,
+                    tb_lasti=last_frame.f_lasti,
+                    tb_lineno=last_frame.f_lineno,
                 )
+            )
 
         return __key
 
@@ -52,7 +74,7 @@ class _PyattrDict(dict):
 class Pyattr(_PyattrDict):
     def __init__(self, **kwargs) -> None:
         object.__setattr__(
-            self, "pyattr_class_object", stack()[1][0].f_locals["__class__"]
+            self, "pyattr_class_object", _pyattr_stack()[1].f_locals["__class__"]
         )
 
         super().update(kwargs)

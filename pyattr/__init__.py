@@ -1,8 +1,8 @@
 from types import FrameType, TracebackType
-from sys import _getframe, exc_info
+from sys import _getframe
 from typing import Any, final
 
-__version__ = "1.3.0"
+__version__ = "1.3.1"
 
 
 def _pyattr_stack() -> list[FrameType]:
@@ -49,7 +49,7 @@ class _PyattrDict(dict):
                         f"Attribute '{__key}' of '{class_object.__name__}' object is protected."
                     )
         except AttributeError as e:
-            last_frame = exc_info()[2].tb_frame.f_back.f_back.f_back
+            last_frame = _pyattr_stack()[0].f_back.f_back.f_back
 
             raise AttributeError(*e.args, name=e.name, obj=e.obj).with_traceback(
                 TracebackType(

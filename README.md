@@ -27,7 +27,7 @@ All you have to do is make your class inherit from the *`pyattr.Pyattr`* class, 
 
 ## Example
 
-Here is a simple examples involving a private variable.
+Here is a simple example involving a private variable.
 
 ```python
 from pyattr import Pyattr

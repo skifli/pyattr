@@ -69,6 +69,6 @@ The overriden *set* and *get* functions of your class call the respective *set* 
 
 ## Benchmarks
 
-The code for the benchmarks can be found in the [benchmark](benchmark/) folder.
+The code for the benchmarks can be found in the [benchmark](https://github.com/skifli/pyattr/blob/main/benchmark/) folder.
 
 [![Benchmark Output](https://raw.githubusercontent.com/skifli/pyattr/main/benchmark/output.png)](https://github.com/skifli/pyattr/blob/main/benchmark/bench_test.py)

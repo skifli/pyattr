@@ -2,7 +2,7 @@ from types import FrameType, TracebackType
 from sys import _getframe
 from typing import Any, final
 
-__version__ = "1.4.1"
+__version__ = "1.4.2"
 
 
 def _pyattr_stack() -> list[FrameType]:

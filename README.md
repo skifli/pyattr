@@ -8,7 +8,8 @@
   - [Installation](#installation)
   - [Usage](#usage)
   - [Example](#example)
-  - [How does it work?](#how-does-it-work)
+  - [How it works](#how-it-works)
+  - [Benchmarks](#benchmarks)
 
 While Python does have name mangling, it is not nearly as powerful as access modifiers found in languages such as C++. **pyattr** provides an easy-to-use API for access modifiers in Python.
 
@@ -58,10 +59,16 @@ example = Example()
 print(example.__example())  # Error - '__example' is a private attribute of 'Example'.
 ```
 
-## How does it work?
+## How it works
 
 > **Note** For a more in-depth explanation on how **pyattr** works, see my [blog post](https://skifli.github.io/blog/2023/pyattr_in_depth_explanation.html#how-does-pyattr-work#how-does-pyattr-work).
 
 **pyattr** overrides the default *set* and *get* functions of your class. The overridden functions defined by **pyattr** are merged into your class when you inherit from the *`pyattr.Pyattr`* class. As well as this, the *`pyattr.Pyattr`* class inherits from the *`pyattr._PyattrDict`* class, which provides a custom dictionary implementation. This is because you can change the variables in a class using *`class.__dict__["var"] = "val"`*, meaning a custom dictionary would be the best way to prevent the access system being circumvented.
 
 The overriden *set* and *get* functions of your class call the respective *set* and *get* functions of the custom dictionary. This dictionary, using *`inspect.stack()`*, works out the caller's function, and the caller's class (if any). It uses this data to work out if the caller should be allowed to access the specified variables. If it shouldn't, an *`AttributeError`* is raised, with an error message explaining the cause.
+
+## Benchmarks
+
+The code for the benchmarks can be found in the [benchmark](benchmark/) folder.
+
+[![Benchmark Output](benchmark/output.png)](benchmark/bench_test.py)

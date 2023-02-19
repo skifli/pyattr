@@ -2,7 +2,7 @@ from types import FrameType, TracebackType
 from sys import _getframe
 from typing import Any, final
 
-__version__ = "1.3.1"
+__version__ = "1.4.0"
 
 
 def _pyattr_stack() -> list[FrameType]:
@@ -14,6 +14,10 @@ def _pyattr_stack() -> list[FrameType]:
         frame = frame.f_back
 
     return frames
+
+
+class PyattrError(Exception):
+    pass
 
 
 class _PyattrDict(dict):
@@ -80,21 +84,34 @@ class Pyattr(_PyattrDict):
         super().update(kwargs)
 
     @final
+    def pyattr_get_class_object(self) -> object:
+        try:
+            return object.__getattribute__(self, "pyattr_class_object")
+        except AttributeError:
+            last_frame = _pyattr_stack()[0].f_back.f_back.f_back
+
+            raise PyattrError(
+                "Did you forget to add 'super().__init__()' at the start of the '__init__' function of your class?"
+            ).with_traceback(
+                TracebackType(
+                    tb_next=None,
+                    tb_frame=last_frame,
+                    tb_lasti=last_frame.f_lasti,
+                    tb_lineno=last_frame.f_lineno,
+                )
+            )
+
+    @final
     def __getattribute__(self, __name: str) -> Any:
         try:
             obj = object.__getattribute__(self, __name)
 
-            if __name in ["__class__", "_PyattrDict__pyattr_check"]:
-                return obj
+            return obj
         except AttributeError:
             pass
 
-        return super().__getitem__(
-            __name, object.__getattribute__(self, "pyattr_class_object")
-        )
+        return super().__getitem__(__name, self.pyattr_get_class_object())
 
     @final
     def __setattr__(self, __name: str, __value: Any) -> None:
-        return super().__setitem__(
-            __name, __value, object.__getattribute__(self, "pyattr_class_object")
-        )
+        return super().__setitem__(__name, __value, self.pyattr_get_class_object())

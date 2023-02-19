@@ -1,8 +1,14 @@
+"""
+Copyright skifli under the MIT license. ALl rights reserved.
+See '../LICENSE' for license information.
+SPDX-License-Identifier: MIT License.
+"""
+
 from types import FrameType, TracebackType
 from sys import _getframe
 from typing import Any, final
 
-__version__ = "1.4.3"
+__version__ = "1.4.4"
 
 
 def _pyattr_stack() -> list[FrameType]:
@@ -53,7 +59,7 @@ class _PyattrDict(dict):
                         f"Attribute '{__key}' of '{class_object.__name__}' object is protected."
                     )
         except AttributeError as e:
-            last_frame = _pyattr_stack()[0].f_back.f_back.f_back
+            last_frame = _pyattr_stack()[3]
 
             raise AttributeError(*e.args, name=e.name, obj=e.obj).with_traceback(
                 TracebackType(
@@ -88,7 +94,7 @@ class Pyattr(_PyattrDict):
         try:
             return object.__getattribute__(self, "pyattr_class_object")
         except AttributeError:
-            last_frame = _pyattr_stack()[0].f_back.f_back.f_back
+            last_frame = _pyattr_stack()[2]
 
             raise PyattrError(
                 "Did you forget to add 'super().__init__()' at the start of the '__init__' function of your class?"

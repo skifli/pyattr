@@ -27,7 +27,7 @@ All you have to do is make your class inherit from the *`pyattr.Pyattr`* class, 
 
 ## Example
 
-Here is a simple example involving a private variable.
+Here is a simple example involving a *private* variable.
 
 ```python
 from pyattr import Pyattr
@@ -42,7 +42,7 @@ example = Example()
 print(example.__name) # Error - '__name' is a private attribute of 'Example'.
 ```
 
-As well as variables, **pyattr** also supports access control of functions!
+As well as variables, **pyattr** also supports access control of *functions*!
 
 ```python
 from pyattr import Pyattr

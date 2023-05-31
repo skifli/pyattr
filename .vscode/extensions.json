@@ -1,8 +1,15 @@
 {
     "recommendations": [
+        "albert.tabout",
+        "alexanderte.dainty-one-dark-pro-vscode",
         "christian-kohler.path-intellisense",
+        "donjayamanne.githistory",
         "gruntfuggly.todo-tree",
+        "kevinrose.vsc-python-indent",
+        "mhutchie.git-graph",
         "ms-python.python",
         "pkief.material-icon-theme",
-    ]
+        "redhat.vscode-yaml",
+        "trond-snekvik.simple-rst",
+    ],
 }

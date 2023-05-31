@@ -1,0 +1,1 @@
+richbench --repeat 100 --times 100 ./
